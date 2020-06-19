@@ -1,0 +1,31 @@
+library(RColorBrewer)
+nb.cols <- 18
+mycolors <- colorRampPalette(brewer.pal(8, "Set2"))(nb.cols)
+library(ggplot2)
+
+#Question 1
+TTM <- read.csv("Mammals3.csv")
+ggplot(data = TTM,aes(x = Order, y =  Abundance))+ geom_boxplot() + labs(x = "Order" , y = "Total", title = "Total Mammals") + theme_classic() + coord_flip()
+ggsave("BoxPlot.pdf")
+
+#Question2
+TTM <- read.csv("Mammals3.csv")
+head(TTM)
+tail(TTM)
+ggplot(data = TTM, aes(x = ParkName, y = Abundance, fill = factor(Order))) + 
+    geom_bar(stat = "identity") + coord_flip() + scale_fill_manual(values = mycolors) + labs(title = "Figure 1  Abundance of Mammals' Order by Park", 
+    y = "Total Number of Mammals Per Park", x = "Park Name", fill = "Order")
+ggsave("StackedBarGraphMammal.pdf")
+
+#Question3
+df = read.table("flora_faunaNew.csv", header = TRUE , fill = TRUE, sep = ",")
+fungi = nrow(subset(df, Category == "Fungi" ))
+bird = nrow(subset(df, Category == "Bird"))
+vascular_plant  = nrow(subset(df, Category == "Vascular Plant"))
+reptile = nrow(subset(df, Category == "Reptile"))
+amphibian = nrow(subset(df, Category == "Amphibian"))
+category = c('Fungi','Bird','Vascular Plant','Reptile','Amphibian')
+entries = c(fungi,bird,vascular_plant,reptile,amphibian)
+new_df = data.frame(category,entries)
+ggplot(new_df,aes( x = category , y =  entries))+ geom_col(position="identity", alpha=0.5) + labs(x = "Category", y = "Total Entries",title = "Total entries in the dataset") + theme_classic()
+ggsave("Histogram.pdf")
